@@ -61,8 +61,11 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+<<<<<<< HEAD
 
 AUTH_USER_MODEL = 'users.User'
+=======
+>>>>>>> 32f6a8f3f1408d57b7a369df73ca72ff335db2fb
 
 LANGUAGE_CODE = 'fr-fr'
 TIME_ZONE = 'Africa/Dakar'
