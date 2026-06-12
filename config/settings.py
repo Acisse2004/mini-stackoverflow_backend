@@ -21,9 +21,9 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_filters',
     # Local apps
-    'users',
-    'questions',
-    'answers',
+'users',
+'questions',
+'answers',
 ]
 
 MIDDLEWARE = [
