@@ -25,29 +25,53 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 class LoginSerializer(serializers.Serializer):
     """US002 — Connexion"""
-    username = serializers.CharField()
+    email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
 
     def validate(self, data):
-        user = authenticate(username=data['username'], password=data['password'])
-        if not user:
+        try:
+            user = User.objects.get(email=data['email'])
+        except User.DoesNotExist:
             raise serializers.ValidationError('Identifiants incorrects.')
+
+        if not user.check_password(data['password']):
+            raise serializers.ValidationError('Identifiants incorrects.')
+
         if not user.is_active:
             raise serializers.ValidationError('Compte désactivé.')
+
         data['user'] = user
         return data
-    
+
+
+class UserQuestionSerializer(serializers.Serializer):
+    """Version allegee d'une question, pour l'afficher dans le profil."""
+    id = serializers.IntegerField()
+    title = serializers.CharField()
+    vote_count = serializers.IntegerField()
+
+
+class UserAnswerSerializer(serializers.Serializer):
+    """Version allegee d'une reponse, pour l'afficher dans le profil."""
+    question = serializers.IntegerField(source='question_id')
+    question_title = serializers.CharField(source='question.title')
+    is_best = serializers.BooleanField()
+
 
 class UserProfileSerializer(serializers.ModelSerializer):
     """US003, US014 — Profil + statistiques"""
     question_count = serializers.ReadOnlyField()
     answer_count = serializers.ReadOnlyField()
+    vote_count = serializers.ReadOnlyField()
+    questions = UserQuestionSerializer(many=True, read_only=True)
+    answers = UserAnswerSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
         fields = (
             'id', 'username', 'email', 'bio', 'avatar',
-            'question_count', 'answer_count', 'date_joined'
+            'question_count', 'answer_count', 'vote_count',
+            'questions', 'answers', 'date_joined'
         )
         read_only_fields = ('id', 'date_joined')
 

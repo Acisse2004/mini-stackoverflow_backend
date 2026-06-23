@@ -32,3 +32,10 @@ class User(AbstractUser):
     @property
     def answer_count(self):
         return self.answers.count()
+
+    @property
+    def vote_count(self):
+        """Total des votes recus sur toutes ses questions + reponses."""
+        question_votes = sum(q.vote_count for q in self.questions.all())
+        answer_votes = sum(a.vote_count for a in self.answers.all())
+        return question_votes + answer_votes

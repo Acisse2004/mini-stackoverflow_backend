@@ -8,6 +8,20 @@ from .models import User
 from .serializers import RegisterSerializer, LoginSerializer, UserProfileSerializer
 
 
+def post(self, request, pk):
+    try:
+        question = Question.objects.get(pk=pk)
+    except Question.DoesNotExist:
+        return Response({'error': 'Question introuvable.'}, status=status.HTTP_404_NOT_FOUND)
+    
+    # ✅ Ajoute ces 3 lignes ici
+    if request.user == question.author:
+        return Response({'error': 'Vous ne pouvez pas voter pour votre propre question.'}, status=status.HTTP_403_FORBIDDEN)
+
+    value = request.data.get('value')
+    # ... reste du code
+
+
 class RegisterView(generics.CreateAPIView):
     """
     POST /api/auth/register/
