@@ -113,3 +113,4 @@ CORS_ALLOWED_ORIGINS = [
     'https://mini-stackoverflow-frontend-c4dq.vercel.app',
 ]
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ALL_ORIGINS = True
